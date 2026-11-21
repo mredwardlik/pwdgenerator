@@ -10,7 +10,7 @@ attack, generates it with a cryptographically secure random source and explains
 the calculation.
 
 [![tests](https://github.com/mredwardlik/pwdgenerator/actions/workflows/tests.yml/badge.svg)](https://github.com/mredwardlik/pwdgenerator/actions/workflows/tests.yml)
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Rich](https://img.shields.io/badge/CLI-rich-8A2BE2?style=flat-square)
 
 <img src="docs/demo.svg" alt="pwdgenerator in the terminal" width="720" />
@@ -59,7 +59,7 @@ eight: `62⁸ ≈ 2.2 · 10¹⁴`.
 pip install git+https://github.com/mredwardlik/pwdgenerator.git
 ```
 
-Python 3.9 or newer. This installs the `pwdgenerator` command and the Python
+Python 3.10 or newer. This installs the `pwdgenerator` command and the Python
 package.
 
 ## 💻 Command line

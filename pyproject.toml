@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Password generation by Anderson's formula and by templates, plus the Vigenère cipher"
 readme = "README.md"
 authors = [{ name = "Edward Lik" }]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = ["rich>=12"]
 keywords = ["password", "generator", "anderson", "vigenere", "cryptography"]
 classifiers = [
