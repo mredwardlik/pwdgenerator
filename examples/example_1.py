@@ -1,262 +1,80 @@
-from pwdgenerator import Generator, Speed, Duration
-from rich.table import Table
+"""Лабораторная работа 1: длина пароля по формуле Андерсона.
+
+Для каждого из 30 вариантов задания (P, V, T) генерирует пароль минимальной
+длины, которую злоумышленник подберёт за время T с вероятностью не выше P.
+"""
+
 from rich.console import Console
-from string import ascii_letters, digits, punctuation
+from rich.markup import escape
+from rich.table import Table
+from rich.text import Text
+
+from pwdgenerator import Duration, Generator, Speed
+from pwdgenerator.alphabets import DEFAULT
 
 console = Console()
 
+# (P, V, T) для вариантов 1–30
+VARIANTS = [
+    (1e-4, Speed(15, 'minute'), Duration(weeks=2)),
+    (1e-5, Speed(3, 'minute'), Duration(days=10)),
+    (1e-6, Speed(10, 'minute'), Duration(days=5)),
+    (1e-7, Speed(11, 'minute'), Duration(days=6)),
+    (1e-4, Speed(100, 'day'), Duration(days=12)),
+    (1e-5, Speed(10, 'day'), Duration(days=30)),
+    (1e-6, Speed(20, 'minute'), Duration(weeks=3)),
+    (1e-7, Speed(15, 'minute'), Duration(days=20)),
+    (1e-4, Speed(3, 'minute'), Duration(days=15)),
+    (1e-5, Speed(10, 'minute'), Duration(weeks=1)),
+    (1e-6, Speed(11, 'minute'), Duration(weeks=2)),
+    (1e-7, Speed(100, 'day'), Duration(days=10)),
+    (1e-4, Speed(10, 'day'), Duration(days=5)),
+    (1e-5, Speed(20, 'minute'), Duration(days=6)),
+    (1e-6, Speed(15, 'minute'), Duration(days=12)),
+    (1e-7, Speed(3, 'minute'), Duration(days=30)),
+    (1e-4, Speed(10, 'minute'), Duration(weeks=3)),
+    (1e-5, Speed(11, 'minute'), Duration(days=20)),
+    (1e-6, Speed(100, 'day'), Duration(days=15)),
+    (1e-7, Speed(10, 'day'), Duration(weeks=1)),
+    (1e-4, Speed(20, 'minute'), Duration(weeks=2)),
+    (1e-5, Speed(15, 'minute'), Duration(days=10)),
+    (1e-6, Speed(3, 'minute'), Duration(days=5)),
+    (1e-7, Speed(10, 'minute'), Duration(days=6)),
+    (1e-4, Speed(11, 'minute'), Duration(days=12)),
+    (1e-5, Speed(100, 'day'), Duration(days=30)),
+    (1e-6, Speed(10, 'day'), Duration(weeks=3)),
+    (1e-7, Speed(20, 'minute'), Duration(days=20)),
+    (1e-4, Speed(15, 'minute'), Duration(days=15)),
+    (1e-5, Speed(3, 'minute'), Duration(weeks=1)),
+]
 
-def main():
 
-    string = console.input(
+def main() -> None:
+    chars = console.input(
         'Введите набор символов для генерации пароля или нажмите [cyan]Enter[/cyan]: ')
-    string = string if len(
-        string) >= 1 else ascii_letters + digits + punctuation
-    console.print(f'Набор символов для генерации: [magenta]{string}[/magenta]')
+    chars = chars or DEFAULT
+    console.print(f'Набор символов для генерации: [magenta]{escape(chars)}[/magenta]', highlight=False)
 
-    pwdgenerator = Generator(list(string))
-    pwdgenerator.min_length = 6
+    generator = Generator(chars, min_length=6)
 
-    passwords = [
+    table = Table(header_style='bold magenta', show_lines=True)
+    for column in ('Вариант', 'Пароль', 'A', 'L', 'P', 'V (паролей/день)', 'T (дней)'):
+        table.add_column(column)
 
-        # Вариант 1
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(15).aMinute,
-            T=Duration(weeks=2),
-        ),
-
-        # Вариант 2
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(3).aMinute,
-            T=Duration(days=10)
-        ),
-
-        # Вариант 3
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(10).aMinute,
-            T=Duration(days=5)
-        ),
-
-        # Вариант 4
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(11).aMinute,
-            T=Duration(days=6)
-        ),
-
-        # Вариант 5
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(100).aDay,
-            T=Duration(days=12)
-        ),
-
-        # Вариант 6
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(10).aDay,
-            T=Duration(days=30)
-        ),
-
-        # Вариант 7
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(20).aMinute,
-            T=Duration(weeks=3)
-        ),
-
-        # Вариант 8
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(15).aMinute,
-            T=Duration(days=20)
-        ),
-
-        # Вариант 9
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(3).aMinute,
-            T=Duration(days=15)
-        ),
-
-        # Вариант 10
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(10).aMinute,
-            T=Duration(weeks=1)
-        ),
-
-        # Вариант 11
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(11).aMinute,
-            T=Duration(weeks=2)
-        ),
-
-        # Вариант 12
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(100).aDay,
-            T=Duration(days=10)
-        ),
-
-        # Вариант 13
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(10).aDay,
-            T=Duration(days=5)
-        ),
-
-        # Вариант 14
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(20).aMinute,
-            T=Duration(days=6)
-        ),
-
-        # Вариант 15
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(15).aMinute,
-            T=Duration(days=12)
-        ),
-
-        # Вариант 16
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(3).aMinute,
-            T=Duration(days=30)
-        ),
-
-        # Вариант 17
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(10).aMinute,
-            T=Duration(weeks=3)
-        ),
-
-        # Вариант 18
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(11).aMinute,
-            T=Duration(days=20)
-        ),
-
-        # Вариант 19
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(100).aDay,
-            T=Duration(days=15)
-        ),
-
-        # Вариант 20
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(10).aDay,
-            T=Duration(weeks=1)
-        ),
-
-        # Вариант 21
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(20).aMinute,
-            T=Duration(weeks=2)
-        ),
-
-        # Вариант 22
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(15).aMinute,
-            T=Duration(days=10)
-        ),
-
-        # Вариант 23
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(3).aMinute,
-            T=Duration(days=5)
-        ),
-
-        # Вариант 24
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(10).aMinute,
-            T=Duration(days=6)
-        ),
-
-        # Вариант 25
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(11).aMinute,
-            T=Duration(days=12)
-        ),
-
-        # Вариант 26
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(100).aDay,
-            T=Duration(days=30)
-        ),
-
-        # Вариант 27
-        pwdgenerator.generate_by_params(
-            P=10**(-6),
-            V=Speed(10).aDay,
-            T=Duration(weeks=3)
-        ),
-
-        # Вариант 28
-        pwdgenerator.generate_by_params(
-            P=10**(-7),
-            V=Speed(20).aMinute,
-            T=Duration(days=20)
-        ),
-
-        # Вариант 29
-        pwdgenerator.generate_by_params(
-            P=10**(-4),
-            V=Speed(15).aMinute,
-            T=Duration(days=15)
-        ),
-
-        # Вариант 30
-        pwdgenerator.generate_by_params(
-            P=10**(-5),
-            V=Speed(3).aMinute,
-            T=Duration(weeks=1)
-        )
-
-    ]
-
-    table = Table(show_header=True,
-                  header_style='bold magenta', show_lines=True)
-
-    table.add_column('Вариант')
-    table.add_column('Пароль')
-    table.add_column('A')
-    table.add_column('L')
-    table.add_column('P')
-    table.add_column('V (паролей/день)')
-    table.add_column('T (дней)')
-
-    for i in range(len(passwords)):
+    for number, (P, V, T) in enumerate(VARIANTS, start=1):
+        password = generator.generate_by_params(P=P, V=V, T=T)
         table.add_row(
-            str(i + 1),
-            str(passwords[i].password),
-            str(passwords[i].A),
-            str(passwords[i].L),
-            str(passwords[i].P),
-            str(passwords[i].V.inDays),
-            str(passwords[i].T.inDays)
+            str(number),
+            Text(password.password),  # not rich markup
+            str(password.A),
+            str(password.L),
+            f'{P:g}',
+            f'{V.per_day:g}',
+            f'{T.total_days:g}',
         )
 
     console.print(table)
 
 
 if __name__ == '__main__':
-    while(True):
-        main()
-        console.input('Продолжить...')
+    main()

@@ -1,22 +1,28 @@
-from pwdgenerator import Generator
-from rich.table import Table
-from rich.console import Console
+"""Лабораторная работа 2: пароли по шаблонам.
 
-ENG_UPPER = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-ENG_LOWER = list('abcdefghijklmnopqrstuvwxyz')
-RUS_UPPER = list('АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')
-RUS_LOWER = list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
-DIGITS = list('0123456789')
-SYMBOLS = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*']
+Пароль строится из идентификатора пользователя: для каждого из 28 вариантов
+задано, какие символы могут стоять на каждой позиции пароля.
+"""
+
+from rich.console import Console
+from rich.markup import escape
+from rich.table import Table
+from rich.text import Text
+
+from pwdgenerator import Generator
+from pwdgenerator.alphabets import DIGITS, ENG_LOWER, ENG_UPPER, RUS_LOWER, RUS_UPPER, SYMBOLS
 
 console = Console()
 
 
 def main():
-    ID = console.input('Введите идентификатор пользователя: ')
+    ID = console.input('Введите идентификатор пользователя: ').strip()
     N = len(ID)
+    if N == 0:
+        console.print('[red]Идентификатор не может быть пустым.[/red]')
+        return
 
-    console.print(f'Идентификатор пользователя [magenta]{ID}[/magenta]')
+    console.print(f'Идентификатор пользователя [magenta]{escape(ID)}[/magenta]', highlight=False)
     console.print(f'Длина идентификатора пользователя [magenta]{N}[/magenta]')
 
     passwords, variants = [], dict(
@@ -299,12 +305,6 @@ def main():
     for variant in variants.values():
         passwords.append(Generator.generate_by_templates(variant))
 
-    # for i in range(1, len(variants) + 1):
-    #     print('')
-    #     print(f'Вариант {i}')
-    #     for row in variants[i]:
-    #         print(row)
-
     table = Table(show_header=True,
                   header_style='bold magenta', show_lines=True)
 
@@ -315,7 +315,7 @@ def main():
     for index, password in enumerate(passwords):
         table.add_row(
             str(index + 1),
-            str(password),
+            Text(password),  # not rich markup
             str(len(password))
         )
 
@@ -323,6 +323,4 @@ def main():
 
 
 if __name__ == '__main__':
-    while(True):
-        main()
-        console.input('Продолжить...')
+    main()
