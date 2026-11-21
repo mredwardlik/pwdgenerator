@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pwdgenerator"
+version = "1.0.0"
+description = "Password generation by Anderson's formula and by templates, plus the Vigenère cipher"
+readme = "README.md"
+authors = [{ name = "Edward Lik" }]
+requires-python = ">=3.9"
+dependencies = ["rich>=12"]
+keywords = ["password", "generator", "anderson", "vigenere", "cryptography"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography",
+    "Environment :: Console",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+pwdgenerator = "pwdgenerator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mredwardlik/pwdgenerator"
+Issues = "https://github.com/mredwardlik/pwdgenerator/issues"
+
+[tool.setuptools]
+packages = ["pwdgenerator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "pwdgenerator"]
+addopts = "--doctest-modules --ignore=pwdgenerator/__main__.py"
